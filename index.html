@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moventra Registration Portal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+
+<body class="min-h-screen p-4">
+
+<!-- BURGER -->
+<button id="menuBtn" class="fixed top-4 left-4 z-[1001] p-2 rounded-lg shadow-lg">
+  <i class="fas fa-bars text-white"></i>
+</button>
+
+<!-- OVERLAY -->
+<div id="overlay" class="fixed inset-0 opacity-0 pointer-events-none transition duration-300 z-[999]"></div>
+
+<!-- SIDE MENU -->
+<div id="sideMenu" class="fixed top-0 left-0 h-full w-64 transform -translate-x-full transition duration-300 z-[1000] p-5">
+  <div class="flex items-center gap-2 mb-8">
+    <i data-lucide="car" class="text-red-500"></i>
+    <h2 class="text-xl font-bold text-white">Moventra</h2>
+  </div>
+  <nav class="space-y-2">
+    <a href="index.html" class="flex items-center gap-3 rounded-lg bg-red-500/20 text-red-400 font-medium">
+      <i data-lucide="user"></i><span>Register Vehicle</span>
+    </a>
+    <a href="qr.html" class="flex items-center gap-3 rounded-lg hover:bg-white/10 transition">
+      <i data-lucide="qr-code"></i><span>QR Code Check</span>
+    </a>
+  </nav>
+</div>
+
+<!-- MAIN CARD -->
+<div class="card p-4 sm:p-7 max-w-xl w-full mx-auto mt-10">
+
+  <div class="text-center mb-6">
+    <h1 class="text-xl sm:text-2xl font-bold">Moventra System</h1>
+    <p class="text-sm opacity-70">Vehicle Registration Portal</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="flex rounded-xl overflow-hidden mb-6" style="border:1px solid #e5e7eb;">
+    <button id="tabStudent" onclick="switchTab('student')"
+      class="w-1/2 py-3 text-sm font-semibold transition"
+      style="background:#ff1a1a;color:white;border-radius:0;box-shadow:none;">
+      <i class="fas fa-graduation-cap mr-2"></i>Student
+    </button>
+    <button id="tabStaff" onclick="switchTab('staff')"
+      class="w-1/2 py-3 text-sm font-semibold transition"
+      style="background:#f3f4f6;color:#6b7280;border-radius:0;box-shadow:none;">
+      <i class="fas fa-briefcase mr-2"></i>Staff
+    </button>
+  </div>
+
+  <div id="feedback"></div>
+
+  <!-- ======================== -->
+  <!-- STUDENT FORM            -->
+  <!-- ======================== -->
+  <div id="studentForm">
+    <div class="w-full bg-gray-200 rounded-full h-2 mb-4 overflow-hidden">
+      <div id="progressBar" class="h-full bg-red-600 transition-all duration-500" style="width:50%;"></div>
+    </div>
+    <div class="flex justify-center mb-6 space-x-3">
+      <div class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center text-sm">1</div>
+      <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-sm">2</div>
+    </div>
+
+    <form id="registrationForm" class="space-y-5">
+      <div id="stage1" class="space-y-4">
+        <h2 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-user text-red-500"></i> Personal Information
+        </h2>
+        <div class="relative">
+          <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="name" type="text" placeholder="Full Name" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="staffId" type="text" placeholder="Student ID" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="password" type="password" placeholder="Create Password (8 characters)" minlength="8" maxlength="8" required class="w-full rounded-lg p-3 pl-10 pr-10 text-base">
+          <button type="button" onclick="togglePass('password','eyeIcon1')" class="absolute right-3 top-1/2 -translate-y-1/2" style="background:none !important;box-shadow:none !important;width:auto;padding:0;">
+            <i id="eyeIcon1" class="fas fa-eye text-gray-400"></i>
+          </button>
+        </div>
+        <div class="relative">
+          <i class="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="phone" type="tel" placeholder="Phone Number" class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-home absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="address" type="text" placeholder="Home Address" class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="dropdown" id="collegeDropdown">
+          <div class="dropdown-selected"><span>Select College</span><i class="arrow"></i></div>
+          <div class="dropdown-options">
+            <div data-value="CEAS">CEAS</div>
+            <div data-value="CHANS">CHANS</div>
+            <div data-value="CBMS">CBMS</div>
+            <div data-value="SOL">SOL</div>
+            <div data-value="CSSTHE">CSSTHE</div>
+          </div>
+        </div>
+        <input type="hidden" id="college">
+        <div class="dropdown" id="campusDropdown">
+          <div class="dropdown-selected"><span>Campus Status</span><i class="arrow"></i></div>
+          <div class="dropdown-options">
+            <div data-value="on">On Campus</div>
+            <div data-value="off">Off Campus</div>
+          </div>
+        </div>
+        <input type="hidden" id="campusStatus">
+        <div class="relative">
+          <i class="fas fa-id-badge absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="driverLicense" type="text" placeholder="Driver License Number" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <button type="button" id="nextStage" class="w-full py-3 text-base rounded-lg">Continue</button>
+      </div>
+
+      <div id="stage2" class="hidden space-y-4">
+        <h2 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-car text-red-500"></i> Vehicle Information
+        </h2>
+        <div class="relative">
+          <input id="plateNumber" type="text" placeholder="ABC-1234" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <input id="make" type="text" placeholder="Make / Model" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <input id="color" type="text" placeholder="Vehicle Color" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="flex gap-3">
+          <button type="button" id="prevStage" class="w-1/3 py-3 rounded-lg" style="background:#e5e7eb;color:#1f2937;box-shadow:none;">Back</button>
+          <button type="submit" class="w-2/3 py-3 rounded-lg">Complete Registration</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ======================== -->
+  <!-- STAFF FORM              -->
+  <!-- ======================== -->
+  <div id="staffForm" class="hidden">
+    <div class="w-full bg-gray-200 rounded-full h-2 mb-4 overflow-hidden">
+      <div id="staffProgressBar" class="h-full bg-red-600 transition-all duration-500" style="width:33%;"></div>
+    </div>
+    <div class="flex justify-center mb-6 space-x-3">
+      <div id="sInd1" class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center text-sm">1</div>
+      <div id="sInd2" class="w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-sm">2</div>
+      <div id="sInd3" class="w-8 h-8 rounded-full bg-gray-300 text-gray-700 flex items-center justify-center text-sm">3</div>
+    </div>
+
+    <form id="staffRegistrationForm" class="space-y-5">
+
+      <!-- STAFF STAGE 1 -->
+      <div id="sStage1" class="space-y-4">
+        <h2 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-briefcase text-red-500"></i> Staff Information
+        </h2>
+        <div class="relative">
+          <i class="fas fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sName" type="text" placeholder="Full Name" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sStaffId" type="text" placeholder="Staff ID" required class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sPassword" type="password" placeholder="Create Password (8 characters)" minlength="8" maxlength="8" required class="w-full rounded-lg p-3 pl-10 pr-10 text-base">
+          <button type="button" onclick="togglePass('sPassword','eyeIcon2')" class="absolute right-3 top-1/2 -translate-y-1/2" style="background:none !important;box-shadow:none !important;width:auto;padding:0;">
+            <i id="eyeIcon2" class="fas fa-eye text-gray-400"></i>
+          </button>
+        </div>
+        <div class="relative">
+          <i class="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sPhone" type="tel" placeholder="Phone Number" class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="relative">
+          <i class="fas fa-home absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sAddress" type="text" placeholder="Home Address" class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <div class="dropdown" id="sCollegeDropdown">
+          <div class="dropdown-selected"><span>Select College</span><i class="arrow"></i></div>
+          <div class="dropdown-options">
+            <div data-value="CEAS">CEAS</div>
+            <div data-value="CHANS">CHANS</div>
+            <div data-value="CBMS">CBMS</div>
+            <div data-value="SOL">SOL</div>
+            <div data-value="CSSTHE">CSSTHE</div>
+          </div>
+        </div>
+        <input type="hidden" id="sCollege">
+        <div class="dropdown" id="sCampusDropdown">
+          <div class="dropdown-selected"><span>Campus Status</span><i class="arrow"></i></div>
+          <div class="dropdown-options">
+            <div data-value="on">On Campus</div>
+            <div data-value="off">Off Campus</div>
+          </div>
+        </div>
+        <input type="hidden" id="sCampusStatus">
+        <div class="relative">
+          <i class="fas fa-id-badge absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <input id="sDriverLicense" type="text" placeholder="Driver License Number" class="w-full rounded-lg p-3 pl-10 text-base">
+        </div>
+        <button type="button" onclick="staffNext(1)" class="w-full py-3 text-base rounded-lg">Continue</button>
+      </div>
+
+      <!-- STAFF STAGE 2 — Vehicles -->
+      <div id="sStage2" class="hidden space-y-4">
+        <h2 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-car text-red-500"></i> Vehicles
+        </h2>
+        <div id="vehiclesList" class="space-y-4"></div>
+        <button type="button" onclick="addVehicle()"
+          class="w-full py-3 rounded-lg flex items-center justify-center gap-2"
+          style="background:#f9fafb;color:#374151;box-shadow:none;border:2px dashed #d1d5db;">
+          <i class="fas fa-plus text-red-500"></i> Add Another Vehicle
+        </button>
+        <div class="flex gap-3">
+          <button type="button" onclick="staffBack(2)" class="w-1/3 py-3 rounded-lg" style="background:#e5e7eb;color:#1f2937;box-shadow:none;">Back</button>
+          <button type="button" onclick="staffNext(2)" class="w-2/3 py-3 rounded-lg">Continue</button>
+        </div>
+      </div>
+
+      <!-- STAFF STAGE 3 — Drivers -->
+      <div id="sStage3" class="hidden space-y-4">
+        <h2 class="text-lg font-semibold flex items-center gap-2">
+          <i class="fas fa-users text-red-500"></i> Designated Drivers
+          <span class="text-xs font-normal text-gray-400 ml-1">(optional)</span>
+        </h2>
+        <p class="text-sm text-gray-500">Add people authorised to drive your registered vehicles.</p>
+        <div id="driversList" class="space-y-4"></div>
+        <button type="button" onclick="addDriver()"
+          class="w-full py-3 rounded-lg flex items-center justify-center gap-2"
+          style="background:#f9fafb;color:#374151;box-shadow:none;border:2px dashed #d1d5db;">
+          <i class="fas fa-plus text-red-500"></i> Add Designated Driver
+        </button>
+        <div class="flex gap-3">
+          <button type="button" onclick="staffBack(3)" class="w-1/3 py-3 rounded-lg" style="background:#e5e7eb;color:#1f2937;box-shadow:none;">Back</button>
+          <button type="submit" class="w-2/3 py-3 rounded-lg">Complete Registration</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+<script type="module" src="app.js"></script>
+<script type="module" src="staff-app.js"></script>
+
+<script>
+lucide.createIcons();
+
+// ==========================
+// TAB SWITCHING
+// ==========================
+function switchTab(tab) {
+  const isStudent = tab === 'student';
+  document.getElementById('studentForm').classList.toggle('hidden', !isStudent);
+  document.getElementById('staffForm').classList.toggle('hidden', isStudent);
+  document.getElementById('tabStudent').style.cssText = isStudent
+    ? 'background:#ff1a1a;color:white;border-radius:0;box-shadow:none;'
+    : 'background:#f3f4f6;color:#6b7280;border-radius:0;box-shadow:none;';
+  document.getElementById('tabStaff').style.cssText = !isStudent
+    ? 'background:#ff1a1a;color:white;border-radius:0;box-shadow:none;'
+    : 'background:#f3f4f6;color:#6b7280;border-radius:0;box-shadow:none;';
+
+  if (!isStudent && document.getElementById('vehiclesList').children.length === 0) {
+    addVehicle();
+  }
+}
+
+// ==========================
+// PASSWORD TOGGLE
+// ==========================
+function togglePass(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.replace('fa-eye-slash', 'fa-eye');
+  }
+}
+
+// ==========================
+// VEHICLE SLOTS
+// ==========================
+let vehicleCount = 0;
+
+function addVehicle() {
+  vehicleCount++;
+  const id = vehicleCount;
+  const div = document.createElement('div');
+  div.id = `vehicle-${id}`;
+  div.className = 'glass-inner p-4 space-y-3';
+  div.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="font-semibold text-sm"><i class="fas fa-car text-red-500 mr-2"></i>Vehicle ${id}</p>
+      ${id > 1 ? `<button type="button" onclick="removeVehicle(${id})" style="background:none;box-shadow:none;color:#ef4444;padding:0;width:auto;font-size:14px;"><i class="fas fa-times"></i> Remove</button>` : ''}
+    </div>
+    <input data-vehicle="${id}" data-field="plate_number" type="text" placeholder="Plate Number (ABC-1234)"
+      class="w-full rounded-lg p-3 text-base vehicle-plate" oninput="formatPlate(this)">
+    <input data-vehicle="${id}" data-field="make" type="text" placeholder="Make / Model"
+      class="w-full rounded-lg p-3 text-base">
+    <input data-vehicle="${id}" data-field="color" type="text" placeholder="Vehicle Color"
+      class="w-full rounded-lg p-3 text-base">
+  `;
+  document.getElementById('vehiclesList').appendChild(div);
+}
+
+function removeVehicle(id) {
+  document.getElementById(`vehicle-${id}`)?.remove();
+}
+
+function formatPlate(input) {
+  let v = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3, 7);
+  input.value = v;
+}
+
+// ==========================
+// DRIVER SLOTS
+// ==========================
+let driverCount = 0;
+
+function addDriver() {
+  driverCount++;
+  const id = driverCount;
+
+  const plates = [...document.querySelectorAll('.vehicle-plate')];
+  let checkboxes = '';
+  plates.forEach((p, i) => {
+    checkboxes += `
+      <label class="flex items-center gap-2 text-sm cursor-pointer">
+        <input type="checkbox" data-driver="${id}" data-field="vehicle_check" value="${i}" class="rounded">
+        <span>${p.value || 'Vehicle ' + (i + 1)}</span>
+      </label>`;
+  });
+
+  const div = document.createElement('div');
+  div.id = `driver-${id}`;
+  div.className = 'glass-inner p-4 space-y-3';
+  div.innerHTML = `
+    <div class="flex items-center justify-between">
+      <p class="font-semibold text-sm"><i class="fas fa-user text-red-500 mr-2"></i>Driver ${id}</p>
+      <button type="button" onclick="removeDriver(${id})" style="background:none;box-shadow:none;color:#ef4444;padding:0;width:auto;font-size:14px;"><i class="fas fa-times"></i> Remove</button>
+    </div>
+    <input data-driver="${id}" data-field="driver_name" type="text" placeholder="Driver Full Name"
+      class="w-full rounded-lg p-3 text-base">
+    <input data-driver="${id}" data-field="driver_license" type="text" placeholder="Driver License Number"
+      class="w-full rounded-lg p-3 text-base">
+    <div class="space-y-2 pt-1">
+      <p class="text-xs text-gray-500 font-medium">Assign to vehicle(s):</p>
+      ${checkboxes}
+    </div>
+  `;
+  document.getElementById('driversList').appendChild(div);
+}
+
+function removeDriver(id) {
+  document.getElementById(`driver-${id}`)?.remove();
+}
+</script>
+
+<!-- LOADING -->
+<div id="loadingOverlay" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-[2000]">
+  <div class="loader-big"></div>
+</div>
+
+<!-- SUCCESS -->
+<div id="successScreen" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[2000]">
+  <div class="card p-6 text-center max-w-sm w-full">
+    <h2 class="text-lg font-bold mb-3">Registration Complete</h2>
+    <p class="mb-3">Successfully registered.</p>
+    <p id="successName" class="font-semibold text-lg"></p>
+    <p id="successPlate" class="text-sm"></p>
+    <p id="successStats" class="hidden text-sm mb-3 opacity-70"></p>
+    <div class="flex justify-center mb-4">
+      <canvas id="successQR"></canvas>
+    </div>
+    <button id="downloadQRBtn" class="w-full py-3 rounded-lg flex items-center justify-center gap-2 mb-2">
+      <i class="fas fa-download"></i> Download QR Code
+    </button>
+    <button id="closeSuccess" class="w-full py-3 rounded-lg">Continue</button>
+  </div>
+</div>
+
+</body>
+</html>

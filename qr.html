@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Check</title>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+<!-- 🍔 BURGER -->
+<button id="menuBtn" class="fixed top-4 left-4 z-[1001] p-2 rounded-lg shadow-lg">
+  <i data-lucide="menu" class="text-white"></i>
+</button>
+
+<!-- 🌑 OVERLAY -->
+<div id="overlay" class="fixed inset-0 opacity-0 pointer-events-none transition duration-300 z-[999]"></div>
+
+<!-- 📂 SIDE MENU -->
+<div id="sideMenu" class="fixed top-0 left-0 h-full w-64 transform -translate-x-full transition duration-300 z-[1000] p-5">
+
+  <div class="flex items-center gap-2 mb-8">
+    <i data-lucide="car" class="text-red-500"></i>
+    <h2 class="text-xl font-bold text-white">Moventra</h2>
+  </div>
+
+  <nav class="space-y-2">
+    <a href="index.html"
+       class="flex items-center gap-3 rounded-lg hover:bg-white/10 transition">
+      <i data-lucide="user"></i>
+      <span>Register Vehicle</span>
+    </a>
+
+    <a href="qr.html"
+       class="flex items-center gap-3 rounded-lg bg-red-500/20 text-red-400 font-medium">
+      <i data-lucide="qr-code"></i>
+      <span>QR Code Check</span>
+    </a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="card p-4 sm:p-6 max-w-md w-full mx-auto">
+
+  <!-- HEADER -->
+  <div class="text-center mb-5">
+    <h2 class="text-lg font-bold flex items-center justify-center gap-2">
+      <i class="fas fa-qrcode text-red-500"></i>
+      QR Code Lookup
+    </h2>
+    <p class="text-sm opacity-60">Search and generate digital pass</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="relative mb-3">
+    <i class="fas fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+    <input id="searchId" type="text" placeholder="Enter Staff / Student ID"
+      class="w-full rounded-lg p-3 pl-10 text-base">
+  </div>
+
+    <!-- 🔐 PASSWORD (NEW) -->
+  <div class="relative mb-3">
+    <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+
+    <input id="userPassword" type="password" placeholder="Enter Password"
+      class="w-full rounded-lg p-3 pl-10 pr-10 text-base">
+
+    <button type="button" id="togglePassword"
+      onclick="togglePasswordVisibility()"
+      class="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent shadow-none p-0 m-0"
+      style="background:none !important; box-shadow:none !important; width:auto;">
+      <i id="eyeIcon" class="fas fa-eye text-gray-400 hover:text-gray-600 transition"></i>
+    </button>
+  </div>
+
+  <!-- BUTTON WITH LOADER -->
+  <button id="searchBtn" onclick="searchUser()"
+    class="w-full py-3 text-base rounded-lg mb-3 flex items-center justify-center gap-2 relative overflow-hidden">
+
+    <!-- normal content -->
+    <span id="btnText" class="flex items-center gap-2">
+      <i class="fas fa-search"></i>
+      Search
+    </span>
+
+    <!-- loader -->
+    <span id="btnLoader" class="hidden absolute inset-0 flex items-center justify-center">
+      <span class="loader-small"></span>
+    </span>
+
+  </button>
+
+  <!-- FEEDBACK -->
+  <div id="feedback"></div>
+
+  <!-- RESULT -->
+  <div id="resultBox" class="hidden mt-5">
+
+    <div class="glass-inner p-5 text-center">
+
+      <h3 class="text-base font-semibold mb-3 flex items-center justify-center gap-2">
+        <i class="fas fa-id-badge text-red-500"></i>
+        Digital Parking Pass
+      </h3>
+
+      <div class="mb-4">
+        <p id="resultName" class="font-semibold text-lg"></p>
+        <p id="resultPlate" class="text-sm"></p>
+        <p id="resultStats" class="hidden text-xs opacity-60 mt-1"></p>
+      </div>
+
+      <div class="flex justify-center mb-4">
+        <canvas id="resultQR" class="p-2 rounded-lg"></canvas>
+      </div>
+
+      <!-- DOWNLOAD -->
+      <button id="downloadQR"
+        class="w-full py-3 rounded-lg flex items-center justify-center gap-2 hidden">
+        <i class="fas fa-download"></i>
+        Download QR Code
+      </button>
+
+      <p class="text-xs opacity-50 mt-3">
+        Show this QR at the entrance
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module" src="qr.js"></script>
+
+<script>
+lucide.createIcons();
+
+function togglePasswordVisibility() {
+  const input = document.getElementById('userPassword');
+  const icon = document.getElementById('eyeIcon');
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+</script>
+
+</body>
+</html>
